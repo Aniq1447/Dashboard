@@ -1,7 +1,7 @@
-FROM node:16
+FROM node:20-alpine
 RUN npm install -g pnpm
-COPY . /dashboard
 WORKDIR /dashboard
+COPY . .
 RUN pnpm install
 RUN echo "Node.js, pnpm, and application dependencies installed successfully."
 EXPOSE 3000
