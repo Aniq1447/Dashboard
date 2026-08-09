@@ -30,7 +30,7 @@ pipeline  {
                     withCredentials([usernamePassword(credentialsId: dockerHubCredentialId, passwordVariable: 'DOCKERHUB_PASSWORD', usernameVariable: 'DOCKERHUB_USERNAME')]) {
                         sh """
                         docker login -u \${DOCKERHUB_USERNAME} -p \${DOCKERHUB_PASSWORD}
-                        docker tag react-app jayesh1250/react-app:\${BUILD_NUMBER}
+                        docker tag react-app aniq47/react-app:\${BUILD_NUMBER}
                         docker push ${dockerImageName}
                         """
                     }
