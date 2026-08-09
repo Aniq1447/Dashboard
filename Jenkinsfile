@@ -8,6 +8,7 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/Aniq1447/dashboard'
             }
         }
+
         stage('Build Docker Image') {
             steps {
                 script {
@@ -20,6 +21,7 @@ pipeline {
                 }
             }
         }
+
         stage('Push to DockerHub') {
             steps {
                 script {
@@ -30,7 +32,7 @@ pipeline {
                     // Authenticate with Docker Hub using the credentials
                     withCredentials([usernamePassword(credentialsId: dockerHubCredentialId, passwordVariable: 'DOCKERHUB_PASSWORD', usernameVariable: 'DOCKERHUB_USERNAME')]) {
                         sh """
-                        docker login -u \${DOCKERHUB_USERNAME} -p \${DOCKERHUB_PASSWORD}
+                        docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}
                         docker tag react-app ${dockerImageName}
                         docker push ${dockerImageName}
                         """
@@ -38,15 +40,18 @@ pipeline {
                 }
             }
         }
-       stage ('Deploy to EKS'){
-    steps{
-        script {
-            def awsCredentialsId = 'aws_creds'
-            def kubeconfigFile = '/var/lib/jenkins/workspace/react-app/react-app-deployment/.kube/react_app_configfile'
-            withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY', credentialsId: awsCredentialsId]]) {
-                sh "aws eks --region us-east-1 update-kubeconfig --name eksdemo --kubeconfig ${kubeconfigFile}"
-                sh "helm upgrade --install ingress-nginx ingress-nginx --repo https://kubernetes.github.io/ingress-nginx --namespace ingress-nginx --create-namespace --kubeconfig ${kubeconfigFile}"
-                sh "helm upgrade --install react-app /var/lib/jenkins/workspace/react-app/react-app-deployment/react-app --kubeconfig ${kubeconfigFile} --set image.tag=${env.BUILD_NUMBER}"
+
+        stage('Deploy to EKS') {
+            steps {
+                script {
+                    def awsCredentialsId = 'aws_creds'
+                    def kubeconfigFile = '/var/lib/jenkins/workspace/react-app/react-app-deployment/.kube/react_app_configfile'
+                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY', credentialsId: awsCredentialsId]]) {
+                        sh "aws eks --region us-east-1 update-kubeconfig --name eksdemo --kubeconfig ${kubeconfigFile}"
+                        sh "helm upgrade --install ingress-nginx ingress-nginx --repo https://kubernetes.github.io/ingress-nginx --namespace ingress-nginx --create-namespace --kubeconfig ${kubeconfigFile}"
+                        sh "helm upgrade --install react-app /var/lib/jenkins/workspace/react-app/react-app-deployment/react-app --kubeconfig ${kubeconfigFile} --set image.tag=${env.BUILD_NUMBER}"
+                    }
+                }
             }
         }
     }
