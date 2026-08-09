@@ -46,7 +46,7 @@ pipeline {
                 script {
                     def awsCredentialsId = 'aws_creds'
                     
-                    withCredentials([usernamePassword(credentialsId: awsCredentialsId, usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                    withCredentials([aws(credentialsId: awsCredentialsId, accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                         sh "aws eks --region us-east-1 update-kubeconfig --name eksdemo --kubeconfig ${WORKSPACE}/.kube/config"
                         sh "helm upgrade --install ingress-nginx ingress-nginx --repo https://kubernetes.github.io/ingress-nginx --namespace ingress-nginx --create-namespace --kubeconfig ${WORKSPACE}/.kube/config"
                         sh "helm upgrade --install react-app ./react-app-deployment/react-app --kubeconfig ${WORKSPACE}/.kube/config --set image.tag=${env.BUILD_NUMBER}"
