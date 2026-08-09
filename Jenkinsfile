@@ -24,7 +24,7 @@ pipeline {
                 script {
                     // Define the Docker Hub credentials ID
                     def dockerHubCredentialId = 'docker-cred'
-                    def dockerImageName = "jayesh1250/react-app:${BUILD_NUMBER}"
+                    def dockerImageName = "aniq47/react-app:${BUILD_NUMBER}"
 
                     // Authenticate with Docker Hub using the credentials
                     withCredentials([usernamePassword(credentialsId: dockerHubCredentialId, passwordVariable: 'DOCKERHUB_PASSWORD', usernameVariable: 'DOCKERHUB_USERNAME')]) {
