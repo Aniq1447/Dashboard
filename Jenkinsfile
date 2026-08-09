@@ -11,6 +11,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
+                    sh "docker logout" // Clears invalid stored Docker credentials
                     sh "docker container prune -f"
                     sh "docker image prune -a -f"
                     sh "docker builder prune --all --force"
