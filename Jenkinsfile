@@ -49,7 +49,7 @@ pipeline {
                     withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY', credentialsId: awsCredentialsId]]) {
                         sh "aws eks --region us-east-1 update-kubeconfig --name eksdemo --kubeconfig ${kubeconfigFile}"
                         sh "helm upgrade --install ingress-nginx ingress-nginx --repo https://kubernetes.github.io/ingress-nginx --namespace ingress-nginx --create-namespace --kubeconfig ${kubeconfigFile}"
-                        sh "helm upgrade --install react-app /var/lib/jenkins/workspace/react-app/react-app-deployment/react-app --kubeconfig ${kubeconfigFile} --set image.tag=${env.BUILD_NUMBER}"
+                        sh "helm upgrade --install react-app ./react-app --kubeconfig ${kubeconfigFile} --set image.tag=${env.BUILD_NUMBER}"
                     }
                 }
             }
