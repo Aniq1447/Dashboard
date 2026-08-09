@@ -1,4 +1,4 @@
-pipeline  {
+pipeline {
     agent any
 
     stages {
@@ -11,14 +11,14 @@ pipeline  {
         stage('Build Docker Image') {
             steps {
                 script {
-                        sh "docker container prune -f"
-                        sh "docker image prune -a -f"
-                        sh "docker builder prune --all --force"
-                        sh "docker system prune"
-                        sh "docker build -t react-app ."
-                    }
+                    sh "docker container prune -f"
+                    sh "docker image prune -a -f"
+                    sh "docker builder prune --all --force"
+                    sh "docker system prune -f"
+                    sh "docker build -t react-app ."
                 }
             }
+        }
         stage('Push to DockerHub') {
             steps {
                 script {
@@ -30,7 +30,7 @@ pipeline  {
                     withCredentials([usernamePassword(credentialsId: dockerHubCredentialId, passwordVariable: 'DOCKERHUB_PASSWORD', usernameVariable: 'DOCKERHUB_USERNAME')]) {
                         sh """
                         docker login -u \${DOCKERHUB_USERNAME} -p \${DOCKERHUB_PASSWORD}
-                        docker tag react-app aniq47/react-app:\${BUILD_NUMBER}
+                        docker tag react-app ${dockerImageName}
                         docker push ${dockerImageName}
                         """
                     }
@@ -50,6 +50,5 @@ pipeline  {
                 }
             }
         }
-        
     }
 }
