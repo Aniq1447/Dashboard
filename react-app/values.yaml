@@ -8,7 +8,7 @@ namespace:
 replicaCount: 1
 
 image:
-  repository: jayesh1250/react-app
+  repository: aniq47/react-app
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"
