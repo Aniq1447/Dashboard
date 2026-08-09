@@ -5,7 +5,7 @@ pipeline  {
         stage('Checkout Code') {
             steps {
                 // Clone the GitHub repository
-                git branch: 'main', url: 'https://github.com/jayesh1250/dashboard'
+                git branch: 'main', url: 'https://github.com/Aniq1447/dashboard'
             }
         }
         stage('Build Docker Image') {
@@ -24,7 +24,7 @@ pipeline  {
                 script {
                     // Define the Docker Hub credentials ID
                     def dockerHubCredentialId = 'docker-cred'
-                    def dockerImageName = "jayesh1250/react-app:${BUILD_NUMBER}"
+                    def dockerImageName = "aniquee/react-app:${BUILD_NUMBER}"
 
                     // Authenticate with Docker Hub using the credentials
                     withCredentials([usernamePassword(credentialsId: dockerHubCredentialId, passwordVariable: 'DOCKERHUB_PASSWORD', usernameVariable: 'DOCKERHUB_USERNAME')]) {
